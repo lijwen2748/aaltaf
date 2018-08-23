@@ -1,0 +1,8 @@
+MODULE main
+VAR
+Tail : boolean;
+a : boolean;
+b : boolean;
+
+LTLSPEC
+! ((((G ((! Tail) | (X (Tail & a)))) U (Tail & b)) & (! b)) & (Tail & (Tail U G ! Tail)))
