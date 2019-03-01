@@ -80,7 +80,7 @@ struct olg_item
    * creat the Dimacs format for Minisat from _root
    *
    */
-  void toDimacs();
+  std::string toDimacs();
   void toDimacsPlus(FILE*); // Invoked by toDimacs();
   void setId(int&); //set the _id for Dimacs construction
   void getVars(int &); //set _vars

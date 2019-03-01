@@ -15,6 +15,8 @@
 #include "minisat/core/Dimacs.h"
 #include "minisat/core/Solver.h"
 #include "minisat/core/SolverTypes.h"
+#include <unistd.h>
+#include <sstream> 
 
 using namespace std;
 using namespace Minisat;
@@ -365,7 +367,7 @@ olg_atom::to_string () const
 
 /*added by Jianwen Li on April 29, 2014
    * creat the Dimacs format for Minisat 
-   * the output is stored in the file "cnf.dimacs"
+   * the output is stored in the file "cnf.dimacsPID" where PID is the process ID
    * Invoked by toDimacs() of olg_formula
    */
 int olg_item::_varNum = 0; //the var number in cnf
@@ -375,17 +377,22 @@ hash_map<int, int> olg_item::_vMap;//the mapping between variable ids and encodi
 std::vector<olg_item*> olg_item::_items;
 std::vector<olg_atom*> olg_item::_atoms;
 
-void
+string
 olg_item::toDimacs()
 { 
+  pid_t pid = getpid ();
+  ostringstream str;  
+  str << pid;
+  string filename = "cnf.dimacs";
+  filename += str.str ();
   FILE *f = NULL;
-  f = fopen("cnf.dimacs", "w");
+  f = fopen(filename.c_str (), "w");
   _varNum = _vMap.size();
   _clNum = 0;
   
   if(f == NULL)
   {
-    perror("cnf.dimacs");
+    perror(filename.c_str ());
     exit(0);
   }
   switch(_op)
@@ -428,7 +435,7 @@ olg_item::toDimacs()
   }
   
   fclose(f);
- 
+  return filename;
 }
 
 //invoked by toDimacs();
@@ -568,11 +575,11 @@ olg_item::SATCall ()
   getVars(i);
   int max = _vMap.size() + 1;
   setId(max);
-  toDimacs();
-  gzFile in = gzopen("cnf.dimacs", "rb");
+  string cnffile = toDimacs();
+  gzFile in = gzopen(cnffile.c_str (), "rb");
   if (in == NULL)
   {
-    printf("Minisat ERROR: Could not open input file cn.dimacs!\n");
+    printf("Minisat ERROR: Could not open input file %s!\n", cnffile.c_str ());
     exit(1);
   }
   Minisat::Solver S;
