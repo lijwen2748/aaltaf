@@ -26,6 +26,8 @@ public:
 		solver_ = new CARSolver (f, verbose);
 		if (evidence)
 			evidence_ = new Evidence ();
+		else
+		    evidence_ = NULL;
 	}
 	void create_solver () {}
 	~LTLfChecker () 
