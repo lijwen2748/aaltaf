@@ -29,10 +29,12 @@ namespace aalta
 		string s = "(";
 		for (hash_map<int, bool>::iterator it = e.begin (); it != e.end (); it ++)
 		{
+			string tmp = aalta_formula::get_name (it->first);
+			if (tmp == "Tail") continue;
 			if (it->second)
-				s += aalta_formula::get_name (it->first) + ", ";
+				s += tmp + ", ";
 			else
-				s += "-" + aalta_formula::get_name (it->first) + ", ";
+				s += "-" + tmp + ", ";
 		}
 		s += ")";
 		traces_.push_back (s);
@@ -44,7 +46,9 @@ namespace aalta
 		string s = "(";
 		for (aalta_formula::af_prt_set::iterator it = p.begin (); it != p.end (); it ++)
 		{
-			s += (*it)->to_string () + ", ";
+			string tmp = (*it)->to_string ();
+			if (tmp.find ("Tail") != string::npos) continue;
+			s += tmp + ", ";
 		}
 		s += ")";
 		traces_.push_back (s);

@@ -329,6 +329,22 @@
  		inv_solver_-> update_assumption_for_constraint (frame_flag);
  	}
  	
+ 	bool CARChecker::sat_once (aalta_formula* f)
+ 	{
+ 		if (solver_->check_final (f))
+		{
+			if (evidence_ != NULL)
+			{
+				Transition *t = solver_->get_transition ();
+				assert (t != NULL);
+				evidence_->push (t->label ());
+				delete t;
+			}
+			return true;
+		}
+		return false;
+ 	}
+ 	
  	
  	void CARChecker::print_solver_clauses ()
  	{

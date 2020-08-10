@@ -119,10 +119,7 @@ namespace aalta
  		}
  		
  		//check whether \@ f can be a final state
- 		inline bool sat_once (aalta_formula* f)
- 		{
- 			return solver_->check_final (f);
- 		}
+ 		bool sat_once (aalta_formula* f);
  		
  		//handle inv_solver_
  		bool solve_inv_at (int frame_level);
