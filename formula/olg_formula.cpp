@@ -75,7 +75,7 @@ olg_formula::sat ()
     _evidence = _root->_evidence;
     return true;
   }
-  //return false;
+  return false;
   
   /*
   
@@ -201,6 +201,7 @@ olg_formula::unsat ()
     return false;
     
   if(_root->unsat()) {olg_item::destroy(); return true;}
+  return false;
   /*
   if(_root->unsat2()) {olg_item::destroy(); return true;}
   
