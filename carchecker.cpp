@@ -224,6 +224,8 @@
  				{
  					std::vector<int> uc = get_selected_uc ();  
  					add_frame_element (frame_level, uc);
+					if (evidence_ != NULL)
+ 						evidence_ -> pop_back ();
  					continue;
  				}
  			}
