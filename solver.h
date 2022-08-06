@@ -34,7 +34,7 @@ class Solver: public AaltaSolver
 {
 public:
 	Solver () {};
-	Solver (aalta_formula *f, bool verbose = false, bool partial_on = false, bool uc_on = true);
+	Solver (aalta_formula *f, bool verbose = false, bool partial_on = false, bool uc_on = true, const aalta_formula* constraint = NULL);
 	~Solver () {};
 	//solve by taking the assumption of the CONJUNCTIVE formula f. 
 	//If \@global is true, take the assumption with only global conjuncts of f

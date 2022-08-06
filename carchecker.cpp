@@ -262,7 +262,8 @@
  	bool CARChecker::inv_found (int frame_level)
  	{
  		bool res = false;
- 		inv_solver_ = new InvSolver (to_check_->id (), verbose_);
+ 		//inv_solver_ = new InvSolver (to_check_->id (), verbose_);
+		inv_solver_ = new InvSolver (to_check_, verbose_, false, true, constraint_);
  		for (int i = 0; i < frames_.size (); i ++)
  		{
  			if (inv_found_at (i))

@@ -15,15 +15,24 @@
  
  namespace aalta
  {
-	 Solver::Solver (aalta_formula *f, bool verbose, bool partial_on, bool uc_on) :
+	 Solver::Solver (aalta_formula *f, bool verbose, bool partial_on, bool uc_on, const aalta_formula* constraint) :
 	 AaltaSolver (verbose), uc_on_ (uc_on), partial_on_ (partial_on), unsat_forever_ (false)
 	 {
+		if (constraint)
+			f = aalta_formula (aalta_formula::And, f, constraint).unique ();
+
 	 	max_used_id_ = f->id ();
 		tail_ = aalta_formula::TAIL ()->id ();
 		build_X_map_priliminary (f);
 		//tail_ = ++max_used_id_;
 		generate_clauses (f);
+
+		/*make sure all constraints are true forever*/
+		if (constraint)
+			add_clause (constraint->id ());
+		
 		coi_set_up (f);
+
 		if (verbose_)
 		{
 			cout << "id of input formula is " << f->id () << endl;

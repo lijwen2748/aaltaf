@@ -17,7 +17,7 @@ namespace aalta
 	class CARSolver : public Solver 
 	{
 	public:
-		CARSolver (aalta_formula *f, bool verbose = false, bool partial_on = false, bool uc_on = true) : Solver (f, verbose, partial_on, uc_on) {};
+		CARSolver (aalta_formula *f, bool verbose = false, bool partial_on = false, bool uc_on = true, const aalta_formula* constraint = NULL) : Solver (f, verbose, partial_on, uc_on, constraint) {};
 		
 		  
 

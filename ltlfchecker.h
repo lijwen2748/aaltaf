@@ -21,9 +21,9 @@ class LTLfChecker
 {
 public:
 	LTLfChecker () {};
-	LTLfChecker (aalta_formula *f, bool verbose = false, bool evidence = false) : to_check_ (f), verbose_ (verbose) 
+	LTLfChecker (aalta_formula *f, bool verbose = false, bool evidence = false, const aalta_formula* constraint = NULL) : to_check_ (f), verbose_ (verbose) 
 	{
-		solver_ = new CARSolver (f, verbose);
+		solver_ = new CARSolver (f, verbose, false, true, constraint);
 		if (evidence)
 			evidence_ = new Evidence ();
 		else

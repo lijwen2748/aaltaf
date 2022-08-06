@@ -16,10 +16,11 @@
 
 namespace aalta
 {
-	class InvSolver : public AaltaSolver 
+	class InvSolver : public Solver 
 	{
 	public:
-		InvSolver (int id, bool verbose = false) : AaltaSolver (verbose), flag_id_ (id) {}
+		//InvSolver (int id, bool verbose = false) : AaltaSolver (verbose), flag_id_ (id) {}
+		InvSolver (aalta_formula *f, bool verbose = false, bool partial_on = false, bool uc_on = true, const aalta_formula* constraint = NULL): Solver (f, verbose, partial_on, uc_on, constraint), flag_id_ (max_used_id_) {}
 		//functions
 		void create_flag_for_frame (int frame_level);
 		void add_clauses_for_frame (std::vector<int>& uc, int frame_level);
@@ -44,8 +45,9 @@ namespace aalta
 	{
 	public:
 		
-		CARChecker (aalta_formula *f, bool verbose = false, bool evidence = false) : LTLfChecker (f, verbose, evidence), inv_solver_ (NULL)
+		CARChecker (aalta_formula *f, bool verbose = false, bool evidence = false, const aalta_formula* constraint = NULL) : LTLfChecker (f, verbose, evidence, constraint), inv_solver_ (NULL)
 		{	
+			constraint_ = constraint;
 			//inv_solver_ = new InvSolver (to_check_->id(), verbose_);
 		}
 
@@ -69,6 +71,7 @@ namespace aalta
 		InvSolver *inv_solver_; //SAT solver to check invariant
 		//CARSolver *solver_;
 
+		aalta_formula* constraint_;
 		
 		//functions
 		//main checking function
