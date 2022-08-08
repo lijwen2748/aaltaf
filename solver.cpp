@@ -68,7 +68,8 @@
 		aalta_formula* res = aalta_formula (aalta_formula::Next, NULL, c).unique ();
 		res = res->split_next ();
 		res = add_neg_to_var (res);
-		res = aalta_formula (aalta_formula::Or, aalta_formula::TAIL(), res).unique ();
+		if (ltlf)
+			res = aalta_formula (aalta_formula::Or, aalta_formula::TAIL(), res).unique ();
 		return res;
 	 }
 
