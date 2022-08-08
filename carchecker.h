@@ -55,6 +55,11 @@ namespace aalta
 		}
 		
 		bool check ();
+
+		inline void add_constraint (const aalta_formula* c, bool ltlf = true, bool verbose = false) 
+		{
+			solver_->add_constraint (c, ltlf, verbose);
+		}
 		
 		//printers
  		void print_solver_clauses ();

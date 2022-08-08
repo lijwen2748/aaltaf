@@ -40,6 +40,109 @@
 			cout << "//////////////////////////////////////////////////////\n";
 		}
 	 }
+
+	 void Solver::add_constraint (const aalta_formula* c, bool ltlf, bool verbose)
+	 {
+		if (verbose)
+			cout << "constraint formula is: " << c->to_string ()<< endl;
+		aalta_formula* f = create_for_block (c, ltlf);
+		if (verbose)
+			cout << "going to block in SAT solver is: " << f->to_string () << endl; 
+		if (verbose)
+		{
+			cout << "before adding constraint: " << endl;
+			print_clauses ();
+		}	
+		add_constraint_clauses (f);
+		add_clause (f->id());
+		if (verbose)
+		{
+			cout << "after adding constraint: " << endl;
+			print_clauses ();
+		}	
+		set_max_used_id (f->id());
+	 }
+
+	 aalta_formula* Solver::create_for_block (const aalta_formula* c, bool ltlf)
+	 {
+		aalta_formula* res = aalta_formula (aalta_formula::Next, NULL, c).unique ();
+		res = res->split_next ();
+		res = add_neg_to_var (res);
+		res = aalta_formula (aalta_formula::Or, aalta_formula::TAIL(), res).unique ();
+		return res;
+	 }
+
+	 aalta_formula* Solver::add_neg_to_var (const aalta_formula* f)
+	 {
+		aalta_formula* res, *left, *right;
+		switch (f->oper ())
+		{
+			case aalta_formula::And:
+				left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
+				right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				res = aalta_formula (aalta_formula::Or, left, right).unique ();
+				break;
+			case aalta_formula::Or:
+				left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
+				right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				res = aalta_formula (aalta_formula::And, left, right).unique ();
+				break;
+			case aalta_formula::Undefined:
+				cout << "Solver.cpp::add_neg_to_var: Error reach here!\n";
+ 				exit (0);
+			default://atoms or temporal formulas
+				res = aalta_formula (aalta_formula::Not, NULL, f).unique ();
+				break;
+		}
+		return res;
+	 }
+
+	 void Solver::add_constraint_clauses (const aalta_formula* f)
+	 {
+		switch (f->oper ())
+ 		{
+ 			case aalta_formula::True:
+ 			case aalta_formula::False:
+ 				cout << "Solver.cpp::add_constraint_clauses: Error reach here!\n";
+ 				exit (0);
+ 			case aalta_formula::Not:
+ 				build_formula_map (f);
+ 				//add_clauses_for (f->r_af ());
+ 				mark_clauses_added (f);
+ 				break;
+ 			case aalta_formula::Next:
+ 			case aalta_formula::Until:
+ 			case aalta_formula::Release:
+				cout << "Solver.cpp::add_constraint_clauses: Error reach here!\n";
+ 				exit (0);
+ 			case aalta_formula::And:
+				build_formula_map (f);
+				add_equivalence (SAT_id (f), SAT_id (f->l_af ()), SAT_id (f->r_af ()));
+				dout << "adding equivalence " << SAT_id (f) << " <-> " << SAT_id (f->l_af ()) << " & " << SAT_id (f->r_af ()) << endl;
+				add_constraint_clauses (f->l_af ());
+ 				add_constraint_clauses (f->r_af ());
+ 				mark_clauses_added (f);
+ 				break;
+ 			case aalta_formula::Or:
+ 				build_formula_map (f);
+ 				add_equivalence (-SAT_id (f), -SAT_id (f->l_af ()), -SAT_id (f->r_af ()));
+ 				dout << "adding equivalence " << -SAT_id (f) << " <-> " << -SAT_id (f->l_af ()) << " & " << -SAT_id (f->r_af ()) << endl;
+				
+				add_constraint_clauses (f->l_af ());
+ 				add_constraint_clauses (f->r_af ());
+ 				mark_clauses_added (f);
+ 				break;
+ 			case aalta_formula::Undefined:
+ 			{
+ 				cout << "Solver.cpp::add_clauses_for: Error reach here!\n";
+ 				exit (0);
+ 			}
+ 			default: //atoms
+ 				build_formula_map (f);
+ 				mark_clauses_added (f);
+	 			break;
+ 		}
+	 }
 	 
 	 //generate clauses of SAT solver
 	 void Solver::generate_clauses (aalta_formula* f)
