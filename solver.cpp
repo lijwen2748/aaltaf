@@ -79,20 +79,27 @@
 		switch (f->oper ())
 		{
 			case aalta_formula::And:
-				left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
-				right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				//left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
+				//right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				left = add_neg_to_var (f->l_af());
+				right = add_neg_to_var (f->r_af ());
 				res = aalta_formula (aalta_formula::Or, left, right).unique ();
 				break;
 			case aalta_formula::Or:
-				left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
-				right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				//left = aalta_formula (aalta_formula::Not, NULL, f->l_af()).unique ();
+				//right = aalta_formula (aalta_formula::Not, NULL, f->r_af()).unique ();
+				left = add_neg_to_var (f->l_af());
+				right = add_neg_to_var (f->r_af ());
 				res = aalta_formula (aalta_formula::And, left, right).unique ();
 				break;
 			case aalta_formula::Undefined:
 				cout << "Solver.cpp::add_neg_to_var: Error reach here!\n";
  				exit (0);
 			default://atoms or temporal formulas
-				res = aalta_formula (aalta_formula::Not, NULL, f).unique ();
+				if (f->oper () == aalta_formula::Not)
+					res = f;
+				else
+					res = aalta_formula (aalta_formula::Not, NULL, f).unique ();
 				break;
 		}
 		return res;
