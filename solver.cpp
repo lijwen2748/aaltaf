@@ -561,8 +561,11 @@
  		assert (f->oper () == aalta_formula::Until || f->oper () == aalta_formula::Release);
  		if (X_map_.find (f->id ()) != X_map_.end ())
  			return;
- 		X_map_.insert (std::pair<int, int> (f->id (), ++max_used_id_));
- 		X_reverse_map_.insert (std::pair<int, aalta_formula*> (max_used_id_, f));
+		aalta_formula* next = aalta_formula (aalta_formula::Next, NULL, f).unique ();
+		X_map_.insert (std::pair<int, int> (f->id (), next->id()));
+ 		X_reverse_map_.insert (std::pair<int, aalta_formula*> (next->id(), f)
+ 		//X_map_.insert (std::pair<int, int> (f->id (), ++max_used_id_));
+ 		//X_reverse_map_.insert (std::pair<int, aalta_formula*> (max_used_id_, f));
  	}
 	
 	int Solver::SAT_id_of_next (aalta_formula *f)
