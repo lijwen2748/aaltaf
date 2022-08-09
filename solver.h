@@ -184,7 +184,7 @@ protected:
  	
  	inline bool is_label (aalta_formula *f)
  	{
- 		return (f->oper () == aalta_formula::Not || f->oper () > aalta_formula::Undefined);
+ 		return ((f->oper () == aalta_formula::Not && f->r_af()->oper() > aalta_formula::Undefined) || f->oper () > aalta_formula::Undefined);
  	}
  	
  	inline bool is_next (aalta_formula *f)

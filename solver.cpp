@@ -65,7 +65,9 @@
 
 	 aalta_formula* Solver::create_for_block (const aalta_formula* c, bool ltlf)
 	 {
-		aalta_formula* res = aalta_formula (aalta_formula::Next, NULL, c).unique ();
+		aalta_formula* res = c->add_tail ();
+		res = res->simplify ();
+		res = aalta_formula (aalta_formula::Next, NULL, res).unique ();
 		res = res->split_next ();
 		res = add_neg_to_var (res);
 		if (ltlf)

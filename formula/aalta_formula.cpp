@@ -35,6 +35,11 @@ aalta_formula::tag_set aalta_formula::all_tags;
 aalta_formula *aalta_formula::_TRUE = NULL;
 aalta_formula *aalta_formula::_FALSE = NULL;
 
+void aalta_formula::print_formula_id ()
+{
+  for (auto f : all_afs)
+    cout << f->to_string () << " -> " << f->id () << endl;
+}
 
 
 aalta_formula *
@@ -1578,6 +1583,44 @@ aalta_formula::to_string () const
 
 aalta_formula* aalta_formula::add_tail ()
 {
+  aalta_formula *res, *l, *r;
+  aalta_formula *not_tail = aalta_formula (Not, NULL, TAIL ()).unique ();
+  switch (oper ())
+  {
+    case Next:
+      r = _right->add_tail ();
+		  res = aalta_formula (Next, NULL, r).unique ();
+		  res = aalta_formula (And, not_tail, res).unique ();
+      break;
+    case WNext:
+      r = _right->add_tail ();
+		  res = aalta_formula (Next, NULL, r).unique ();
+		  res = aalta_formula (Or, TAIL(), res).unique ();
+      break;
+    case Until:
+      l = _left->add_tail ();
+      r = _right->add_tail ();
+      l = aalta_formula (And, not_tail, l).unique ();
+      res = aalta_formula (Until, l, r).unique ();
+      break;
+    case Release:
+      l = _left->add_tail ();
+      r = _right->add_tail ();
+      l = aalta_formula (Or, TAIL(), l).unique ();
+      res = aalta_formula (Until, l, r).unique ();
+      break;
+    case And:
+    case Or:
+      l = _left->add_tail ();
+      r = _right->add_tail ();
+      res = aalta_formula (oper (), l, r).unique ();
+      break;
+    default:
+      res = unique ();
+  }
+  return res;
+
+/*
 	aalta_formula *res, *l, *r;
 	if (oper () == Next)
 	{
@@ -1599,6 +1642,7 @@ aalta_formula* aalta_formula::add_tail ()
 		res = aalta_formula (oper (), l, r).unique ();
 	}
 	return res;
+  */
 }
 
 
@@ -1626,7 +1670,7 @@ aalta_formula::split_next ()
 		}
 	}
 	else if (oper () > Undefined)
-		return this;
+		return unique ();
 	else
 	{
 		if (_left != NULL)
