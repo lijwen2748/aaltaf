@@ -112,7 +112,7 @@ ltlf_sat (int argc, char** argv)
   else
   {
 	CARChecker checker (af, verbose, evidence);
-	//aalta_formula* c1 = aalta_formula ("(((X p3) | p5) U p2)", true).unique ();
+	//aalta_formula* c1 = aalta_formula ("(false R (p1 U p0))", true).unique ();
 	//aalta_formula* c2 = aalta_formula ("(F(p6))", true).unique ();
 	//checker.add_constraint (c1, true, true);
 	//checker.add_constraint (c2, true, true);

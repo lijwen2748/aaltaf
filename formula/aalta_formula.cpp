@@ -1600,14 +1600,20 @@ aalta_formula* aalta_formula::add_tail ()
     case Until:
       l = _left->add_tail ();
       r = _right->add_tail ();
-      l = aalta_formula (And, not_tail, l).unique ();
+      if (l == TRUE ())
+        l = not_tail;
+      else
+        l = aalta_formula (And, not_tail, l).unique ();
       res = aalta_formula (Until, l, r).unique ();
       break;
     case Release:
       l = _left->add_tail ();
       r = _right->add_tail ();
-      l = aalta_formula (Or, TAIL(), l).unique ();
-      res = aalta_formula (Until, l, r).unique ();
+      if (l == FALSE ())
+        l = TAIL ();
+      else 
+        l = aalta_formula (Or, TAIL(), l).unique ();
+      res = aalta_formula (Release, l, r).unique ();
       break;
     case And:
     case Or:
