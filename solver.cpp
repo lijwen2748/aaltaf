@@ -563,7 +563,7 @@
  			return;
 		aalta_formula* next = aalta_formula (aalta_formula::Next, NULL, f).unique ();
 		X_map_.insert (std::pair<int, int> (f->id (), next->id()));
- 		X_reverse_map_.insert (std::pair<int, aalta_formula*> (next->id(), f)
+ 		X_reverse_map_.insert (std::pair<int, aalta_formula*> (next->id(), f));
  		//X_map_.insert (std::pair<int, int> (f->id (), ++max_used_id_));
  		//X_reverse_map_.insert (std::pair<int, aalta_formula*> (max_used_id_, f));
  	}
