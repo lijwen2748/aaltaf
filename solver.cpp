@@ -205,6 +205,7 @@
 				if (!f->is_future ())
 					tmp1 = aalta_formula (aalta_formula::And, f->l_af(), tmp1).unique ();
 				id = tmp1->id();
+				set_max_used_id (id);
  				add_equivalence (-SAT_id (f), -SAT_id (f->r_af ()), -id);
  				dout << "adding equivalence " << -SAT_id (f) << " <-> " << -SAT_id (f->r_af ()) << " & " << -id << endl;
  				
@@ -236,6 +237,7 @@
 				if (!f->is_globally ())
 					tmp1 = aalta_formula (aalta_formula::Or, f->l_af(), tmp1).unique ();
 				id = tmp1->id();
+				set_max_used_id (id);
 				//id = aalta_formula (aalta_formula::Next, NULL, f).unique()->id();
  				add_equivalence (SAT_id (f), SAT_id (f->r_af ()), id);
  				dout << "adding equivalence " << SAT_id (f) << " <-> " << SAT_id (f->r_af ()) << " & " << id << endl;
@@ -562,6 +564,7 @@
  		if (X_map_.find (f->id ()) != X_map_.end ())
  			return;
 		aalta_formula* next = aalta_formula (aalta_formula::Next, NULL, f).unique ();
+		set_max_used_id (next->id());
 		X_map_.insert (std::pair<int, int> (f->id (), next->id()));
  		X_reverse_map_.insert (std::pair<int, aalta_formula*> (next->id(), f));
  		//X_map_.insert (std::pair<int, int> (f->id (), ++max_used_id_));
