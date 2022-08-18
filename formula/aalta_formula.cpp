@@ -686,8 +686,8 @@ aalta_formula::simplify_release (aalta_formula *l, aalta_formula *r)
     simp = aalta_formula (Release, l_s->_right, l_s->_left).simplify ();
   else if (l_s->contain (Right, Release, r_s)) // (b R a) R a = b R a
     simp = l_s;
-  else if (l_s->_op == Next && r_s->_op == Next) // X a R X b = X ( a R b )
-    simp = aalta_formula (Next, NULL, aalta_formula (Release, l_s->_right, r_s->_right).simplify ()).simplify ();
+  // else if (l_s->_op == Next && r_s->_op == Next) // X a R X b = X ( a R b )
+  //   simp = aalta_formula (Next, NULL, aalta_formula (Release, l_s->_right, r_s->_right).simplify ()).simplify ();
   else if ((l_s->_op == Not && l_s->_right == r_s)
            || (r_s->_op == Not && r_s->_right == l_s)) // !a R a = False R a
     //@ TODO: 这里只处理了原子，是否扩展为普通公式？ AND 似乎最后没必要再simplify
